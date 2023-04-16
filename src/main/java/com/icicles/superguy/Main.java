@@ -4,29 +4,30 @@ import org.lwjgl.opengl.GL;
 
 import static com.icicles.superguy.MainWindow.log;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.bgfx.BGFX.*;
 
 public class Main {
-    static void loop(long window) {
-        GL.createCapabilities();
+    static void loop(long window, int width, int height) {
+
+        bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
+        bgfx_set_view_rect(0,0,0, width, height);
 
         log("Entering loop...");
 
-        // Set the clear color
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
+        int counter = 0;
         while (!glfwWindowShouldClose(window)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            System.out.printf("Frame %s", counter);
+            bgfx_frame(false);
 
-            glfwSwapBuffers(window); // swap the color buffers
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
+            // Graphics code here
+
+
+            glfwSwapBuffers(window);
             glfwPollEvents();
             handleInput(window);
+
+            counter++;
         }
     }
 
@@ -43,6 +44,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        MainWindow window = new MainWindow();
+        int width = 5000;
+        int height = 5000;
+        MainWindow window = new MainWindow(width, height);
     }
 }
